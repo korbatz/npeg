@@ -1,5 +1,7 @@
 # NPEG for VLC
 
+![Screenshot](samples/screen.png)
+
 ### Bringing a forgotten Amiga video codec back to life
 
 **NPEG** is a video format developed by **Noster** of the Amiga demoscene group **Venture** for the 1998 production *Video Meliora Proboque, Deteriora Sequor*. This project reconstructs the decoder from surviving Amiga binaries and original `.npeg` files, and makes the format playable in **VLC 3.x** on Linux.
