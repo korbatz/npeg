@@ -228,6 +228,8 @@ To inspect a file or export its first frame without FFmpeg:
 
 ### Troubleshooting
 
+If compilation reports **`implicit declaration of function 'N_'`**, you have an earlier source revision. This one uses ordinary string literals in the VLC module declaration. Update `src/vlc_npeg.c` before rebuilding.
+
 If you see **`ISO C forbids conversion of function pointer to object pointer type`** warnings from `vlc_plugin.h`, they come from VLC 3.x's own plugin macros under `-Wpedantic`; these warnings alone are not a build failure.
 
 If the library builds but the player cannot open the NPEG file, capture detailed VLC output:
