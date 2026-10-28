@@ -1,3 +1,5 @@
+![Screenshot](samples/screen.png)
+
 # NPEG for VLC
 
 ### Bringing a forgotten Amiga video codec back to life
