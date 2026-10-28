@@ -1,7 +1,5 @@
 # NPEG for VLC
 
-![Screenshot](samples/screen.png)
-
 ### Bringing a forgotten Amiga video codec back to life
 
 **NPEG** is a video format developed by **Noster** of the Amiga demoscene group **Venture** for the 1998 production *Video Meliora Proboque, Deteriora Sequor*. This project reconstructs the decoder from surviving Amiga binaries and original `.npeg` files, and makes the format playable in **VLC 3.x** on Linux.
@@ -14,7 +12,7 @@ This is a **native VLC demux plugin**, not a wrapper around an MP4 file. The fra
 
 In the late 1990s, the Amiga demoscene was still producing ambitious audiovisual work on machines whose memory bandwidth, CPU power, storage and graphics architecture imposed very real limits. Demoscene developers routinely wrote their own playback engines, compression schemes and timing code to make the hardware do something it was never quite supposed to do.
 
-Venture's *Video Meliora Proboque, Deteriora Sequor* belongs to that world. The preserved AmigaOS executable identifies itself with the version string:
+Venture's *Video Meliora Proboque, Deteriora Sequor* belongs to that world. It was released at **Satellite 1998** in November 1998, where it placed **first in the Amiga demo competition**, according to the [Pouët production entry](https://www.pouet.net/prod.php?which=78531). The production was presented as an Amiga AGA demo, although it is also classified as *wild* in the Pouët database. The preserved AmigaOS executable identifies itself with the version string:
 
 ```text
 $VER: VIDEO_MELIORA by Venture (8.11.98).
@@ -22,11 +20,39 @@ $VER: VIDEO_MELIORA by Venture (8.11.98).
 
 The string establishes a date associated with the executable (**8 November 1998**), not necessarily its original public-release date. Its surviving code refers to `mpega.library`, `cybergraphics.library`, an NPEG replay process and related playback routines. In other words, this was more than an animation pasted into a standard picture viewer: it had a purpose-built multimedia playback path.
 
-**Noster** wrote the NPEG codec and its player. The codec name is a playful nod to **Noster** and **MPEG**, but NPEG is **not an MPEG-compliant file format**. The Venture production also involved **Korbatz** (creative direction and lyrics), **Noster** (lyrics and codec) and **Wierza** (music). These personal credits are based on recollections from people involved in the production; they are not presented as a complete original credit roll.
+**Noster** wrote the NPEG codec and its Amiga playback engine. The name playfully combines **Noster** with **MPEG**, but NPEG is **not an MPEG-compliant file format**. The Venture production also involved **Korbatz** (creative direction and lyrics), **Noster** (lyrics, codec and player), **Wierza** (music), and **Smajk** (production contributor and uploader of the archived distribution). These credits draw on firsthand recollections and the surviving release notes; they are not intended as an exhaustive original credit roll.
+
+The original release notes thanked **Bax** for allowing the band to record audio in his studio, **Steff** for lending a bass guitar, and **Skoczek** for lending a guitar. The surviving documentation conveys the spirit of a production that mixed custom software, live-action footage, recorded music and an unmistakably irreverent sense of humour.
 
 The Latin title comes from Ovid's *Metamorphoses* (Book VII): *“I see the better course and approve it, but follow the worse.”* An appropriately mischievous title for a garage-born demoscene production.
 
 There is a small preservation story here too: the original files survived for decades, but their dedicated Amiga player did not follow them to modern operating systems. This project aims to change that—without requiring an Amiga emulator or a previously converted reference recording.
+
+## Original Amiga releases and hardware requirements
+
+The [surviving release notes](https://www.pouet.net/prod_nfo.php?font=4&which=78531), uploaded under **Smajk**'s address (`smajk@man.szczecin.pl`), describe a post-party revision that differed slightly from the version shown at Satellite 1998. A separate patch was distributed for owners of the party release: its installation instructions told users to copy the patch files into the original demo directory and run an `update` script. The revision also included a dedicated **low-end version**.
+
+The original Amiga-side requirements, as documented by Venture, were:
+
+- An **Amiga with AGA** graphics or a **CyberGraphX (CGX)**-compatible graphics environment.
+- **XPK**, **asyncio** and **mpega** libraries, plus the **AHI** audio system.
+- A powerful **Motorola 68k CPU**; the documentation explicitly favored the fastest 68k processor available.
+- Some familiarity with the Amiga demoscene—listed, tongue-in-cheek, as a requirement in its own right.
+
+### The 68060 and the low-end edition
+
+The original release notes are unusually candid about performance: *Video Meliora* was computationally demanding, and Venture created a special reduced version for machines **without a 68060**. It used **lower film quality**, was **scaled down** and omitted some functionality, including **English subtitles**. This was not simply a case of choosing a slower FPS at playback: the distributed editions genuinely differed in features and visual quality.
+
+The low-end player offered more display modes. Noster recommended **Super72 at 200 × 150**, with additional extra-low-resolution modes available at the expense of appearance. The player attempted to center its output at higher resolutions, but did not apply horizontal centering in CGX modes: Noster noted that he was unsure whether CyberGraphX supported the required screen movement.
+
+These facts are important when discussing the codec's design. NPEG was resource-conscious, but the full production was **not optimized for an unexpanded A500 or a stock A1200**. The 68060 was the performance target of the richer edition; compatibility with weaker CPUs was addressed by releasing a separate, reduced version. A recollection from the production circle also confirms that Noster owned an **A1200 with a 68060 accelerator** toward the end of that period. The release notes, however, do not establish how many CPU-specific decoder implementations were compiled internally.
+
+### PowerUP accelerator incompatibility
+
+The original player was reported not to work with certain **PowerUP PPC accelerator boards**, even though its code was intended for **m68k** execution. Venture advised disabling the PowerUP board to watch the demo; according to the release notes, the party organizers managed this without physically removing the card. Noster did not own a PPC setup for debugging and suspected the problem could lie in AmigaDOS **process creation or message-port initialization**. That is his historical hypothesis, not a confirmed root cause.
+
+This compatibility problem belongs to the **original 1998 Amiga player**, not to the modern Linux/VLC plugin described below.
+
 
 ## What survived
 
@@ -38,7 +64,7 @@ There is a small preservation story here too: the original files survived for de
 | `muza.mp2` (or `muza(1).mp2`) | Separate MPEG Layer II audio track |
 | `tekst.xpk`, `doodie_friend.xpk` | Other original Venture assets compressed with XPK/HFMN |
 
-Both preserved videos total **1,488 encoded frames**. The main NPEG stream does not contain its accompanying MP2 sound. The preserved reference recording suggests **7.5 frames per second**; this frame rate is a playback default, **not a confirmed property of the NPEG header**.
+Both preserved videos total **1,488 encoded frames**. The main NPEG stream does not contain its accompanying MP2 sound. The preserved reference recording suggests **7.5 frames per second**; this frame rate is a playback default, **not a confirmed property of the NPEG header**. The 160 × 88 sample dimensions should likewise **not** be treated as proof that every historically distributed, high-quality or low-end NPEG asset used the same size.
 
 ## How NPEG works
 
@@ -230,10 +256,6 @@ To inspect a file or export its first frame without FFmpeg:
 
 ### Troubleshooting
 
-If compilation reports **`implicit declaration of function 'N_'`**, you have an earlier source revision. This one uses ordinary string literals in the VLC module declaration. Update `src/vlc_npeg.c` before rebuilding.
-
-If you see **`ISO C forbids conversion of function pointer to object pointer type`** warnings from `vlc_plugin.h`, they come from VLC 3.x's own plugin macros under `-Wpedantic`; these warnings alone are not a build failure.
-
 If the library builds but the player cannot open the NPEG file, capture detailed VLC output:
 
 ```bash
@@ -276,12 +298,19 @@ A useful next step is real-world VLC playback validation, followed by exact fram
 
 ## Credits and provenance
 
-- **Noster / Venture** — original NPEG codec and Amiga playback engine (1998).
-- **Korbatz, Noster and Wierza** — creative contributors to *Video Meliora Proboque, Deteriora Sequor*, as recalled by a participant.
+- **Noster / Venture** — original NPEG codec and Amiga playback engine (1998); lyrics co-written with Korbatz.
+- **Korbatz** — Venture creative contributor, art direction and lyrics.
+- **Wierza** — music.
+- **Smajk** — contributed to the Venture production and uploaded the preserved release/archive documentation.
+- **Bax** — access to the studio used for recording.
+- **Steff** — loan of a bass guitar.
+- **Skoczek** — loan of a guitar.
 - **This project** — modern reverse-engineered reconstruction of the format and a VLC playback module, based on preserved files and disassembly. This is an independent effort, not an official continuation of the original project.
 
-Historical evidence includes the original executable's `$VER` string, its remaining playback symbols and the preserved sample files. Additional references:
+Historical evidence includes the original executable's `$VER` string, its remaining playback symbols, the preserved sample files, Venture's archived NFO and firsthand recollections from a participant. The NFO describes a **patch for the party version**, a revised release and a separate **low-end build**; these historical versions should not be conflated with the modern VLC module. Additional references:
 
+- [Pouët: *Video Meliora* by Venture — Satellite 1998, first place](https://www.pouet.net/prod.php?which=78531)
+- [Archived Venture release notes (NFO)](https://www.pouet.net/prod_nfo.php?which=78531)
 - [VLC development package for Fedora](https://packages.fedoraproject.org/pkgs/vlc/vlc-devel/)
 - [Ovid's Latin line and translation](https://pl.wikisource.org/wiki/M._Arcta_S%C5%82owniczek_wyraz%C3%B3w_obcych/Video_meliora,_proboque,_deteriora_sequor)
 
